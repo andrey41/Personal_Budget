@@ -5,75 +5,45 @@
  */
 package com.example.Personal_Budget.model;
 
-import android.app.Activity;
-
-import java.io.*;
-
 /**
  *
  * @author VLad
  */
-public class Model implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 6537245340817619248L;
-	Operations dohod;
+public class Model {
     Operations rashod;
-    public String str;
-    public Model()
+    Operations dohod;
+    int currentDay;
+    int currentMonth;
+    int currentYear;
+    double balance;
+    public Model(int day,int month,int year)
     {
-        dohod=new Operations("доходы");
-        rashod=new Operations("расходы");
+        rashod=new Operations("rashod");
+        dohod=new Operations("dohod");
+        currentDay=day;
+        currentMonth=month;
+        currentYear=year;
+        balance=0;
     }
-    public Operations getObj(String name)
+    public void setCurrentDate(int day,int month,int year)
     {
-        if (name=="расходы") return rashod;
-        else return dohod;
+        currentDay=day;
+        currentMonth=month;
+        currentYear=year;
+    }
+    public void calculateBalance()
+    {
+        balance=dohod.totalSumForCurrentMonth-rashod.totalSumForCurrentMonth;
+    }
+    public void updateModel()
+    {
         
+        rashod.calculateTotalSumForCurrentMonth(currentMonth);
+        rashod.calculateTotalSumForCurrentMonth(currentMonth);
+        calculateBalance();
     }
-    public float getBalance(int mes)
-    {
-        float bal=0f;
-        bal=dohod.summCategories(mes)-rashod.summCategories(mes);
-        return bal;
-    }
-	public void writeToFile(Activity act) 
-	{
-		Model m=new Model();
-		m.dohod=dohod;
-		m.rashod=rashod;
-		m.dohod.clearAllDel();
-		m.rashod.clearAllDel();
-		try {
-			FileOutputStream fos = act.openFileOutput("file", act.MODE_PRIVATE);
-			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(m);
-			os.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	public void readFromFile(Activity act) 
-	{
-		Model m;
-		try {
-			FileInputStream fis = act.openFileInput("file");
-			ObjectInputStream is = new ObjectInputStream(fis);
-			m = (Model) is.readObject();
-			dohod=m.dohod;
-			rashod=m.rashod;
-			is.close();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-   
+    
+
+    
+    
 }

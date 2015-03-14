@@ -5,143 +5,64 @@
  */
 package com.example.Personal_Budget.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Category implements Serializable{
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 449549456091009537L;
-	ArrayList<Record> records;
-    public String name;
-    boolean del;
+/**
+ *
+ * @author VLad
+ */
+public class Category {
+    ArrayList<Record> records;
+    String name;
+    double sumForCurrentMonth;
     
-    Category(String n)
-    {
-        name=n;
+    public Category(String name) {
+        this.name = name;
         records=new ArrayList<Record>();
-        del=false;
+        sumForCurrentMonth=0;
     }
     
-    public void addRecord(int d,int mes,int y,float m,String de)
+    public void addRecord(int day,int month,int year,double sum)
     {
-        Record r=new Record(d, mes, y, m, de);
-        records.add(r);
+        records.add(new Record(day, month, year, sum));
     }
-    public void changeData(int i, int d,int mes,int y)
+    public void delRecord(int index)
     {
-        records.get(i).changeDay(d);
-        records.get(i).changeMonth(mes);
-        records.get(i).changeYear(y);
+        if (index<records.size())
+        {
+            records.remove(index);
+        }
     }
-    public void changeDescrip(int i, String de)
+    public void calculateSumForMonth(int month)
     {
-        records.get(i).changeDescription(de);
+        double s=0;
+        Record r;
+        for (int i=records.size()-1;i>-1;i--)
+        {
+            r=records.get(i);
+            if (r.month==month)
+            {
+                 s+=records.get(i).month;
+            }
+        }
+        sumForCurrentMonth=s;
     }
-    public void changeMoney(int i, float m)
+    public int getRecordsCountInChoosenMonth(int month)
     {
-        records.get(i).changeMoney(m);
+        int size=0;
+        Record r;
+        for (int i=records.size()-1;i>-1;i--)
+        {
+            r=records.get(i);
+            if (r.month==month)
+            {
+                 size+=records.get(i).month;
+            }
+        }
+       return size;
     }
     
-    public Record getCategoryDay(int d, int mes)
-    {
-        int t=records.size();
-        int da;
-        int me;
-        for (int k=0;k<t;k++)
-        {
-            da=records.get(k).getDay();
-            me=records.get(k).getMonth();
-            if ((da==d)&&(me==mes))
-                return records.get(k);
-        }
-        return null;
-    }
-    public Record getCategoryWeek(int d, int mes)
-    {
-        
-        return null;
-    }
-    public Record getCategoryMonth(int mes)
-    {
-        int t=records.size();
-        for (int k=0;k<t;k++)
-        {
-            int me=records.get(k).getMonth();
-            if (me==mes)
-                return records.get(k);
-        }
-        return null;
-    } 
-    public float summCategory(int mes)
-    {
-        int me;
-        float summ=0f;
-        int m=records.size();
-        for(int k=0;k<m;k++)
-        {
-            me=records.get(k).getMonth();
-            if (me==mes)
-            summ=summ+records.get(k).getMoney();
-        }
-        return summ;
-    }
-    public Record getRecord(int i)
-    {
-        return records.get(i);
-    }
-
-    public void changeRecord(int i, int r, int d,int mes,int y,float m,String de)
-    {
-       changeData( i, d, mes, y);
-       changeDescrip(i,de);
-       changeMoney(i,m);
-    }
-    public void removeRecord (int i)
-    {
-        Record r=records.remove(i); 
-    }
-    public void setDel(boolean t)
-    {
-    	del=t;
-    }
-    public boolean getDel()
-    {
-    	return del;
-    }
-    public void chooseRecordForDel(int i)
-    {
-    	records.get(i).setDel(true);
-    }
-    public void cancelDelRecords()
-    {
-    	for(int i=0;i<records.size();i++)
-    	{
-    		records.get(i).setDel(false);
-    	}
-    }
-    public void delChoosenCategories()
-    {
-    	Record c=new Record(0, 0, 0, 0, "");
-    	int size=records.size();
-		for (int i=0,j=0;i<size;i++)
-		{
-			c=records.get(j);
-			if (c.getDel())
-				records.remove(j);
-			else
-				j++;
-		}
-    }
-    public String getName()
-    {
-    	return name;
-    }
-    public int getRecordsCount()
-    {
-    	return records.size();
-    }
-
+    
+    
+    
 }
-
